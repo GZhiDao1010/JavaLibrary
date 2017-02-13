@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +13,7 @@ import db.DBUtils;
 import model.Goddess;
 
 public class GoddessDao { //增加
-	public void addGoddess()
+	public void addGoddess(Goddess g)
 	{
 		Connection conn =  DBUtils.getConnection();
 		String sql = "" +
@@ -24,7 +25,12 @@ public class GoddessDao { //增加
 		try {
 			//将sql语句加载到数据库驱动中，但是没有直接执行
 			PreparedStatement ptmt = conn.prepareStatement(sql);
-			ptmt.setString(1,user_name);
+			ptmt.setString(1,g.getUser_name());
+			ptmt.setInt(2,g.getSex());
+			ptmt.setInt(3, g.getAge());
+			ptmt.setDate(4,new Date(g.getBirthday().getTime()));
+			ptmt.setString(5, g.getEmail());
+			ptmt.setString(6, g.getMobile());
 			ptmt.execute();//调用execute()才执行sql语句
 		} catch (SQLException e) {
 			e.printStackTrace();
