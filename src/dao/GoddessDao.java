@@ -19,9 +19,9 @@ public class GoddessDao { //增加
 		String sql = "" +
 				"insert into imooc_goddess"+
 				"(user_name,sex,age,birthday,email,mobile,"+
-				"create_user,create_date,updata_user,update_date,isdel)"+
+				"create_user,create_date,update_user,update_date,isdel)"+
 				"value(" + 
-				"?,?,?,?,?,?,?,?,?,?,?)";//?表示相对应的参数赋值的占位符
+				"?,?,?,?,?,?,?,'2017-10-10',?,'2017-10-10',?)";//?表示相对应的参数赋值的占位符
 		try {
 			//将sql语句加载到数据库驱动中，但是没有直接执行
 			PreparedStatement ptmt = conn.prepareStatement(sql);
@@ -31,22 +31,73 @@ public class GoddessDao { //增加
 			ptmt.setDate(4,new Date(g.getBirthday().getTime()));
 			ptmt.setString(5, g.getEmail());
 			ptmt.setString(6, g.getMobile());
+			ptmt.setString(7,g.getCreate_user());
+			ptmt.setString(8, g.getUpdate_user());
+			ptmt.setInt(9,g.getIsdel());
 			ptmt.execute();//调用execute()才执行sql语句
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void updateGoddess()
+	public void updateGoddess(Goddess g)
 	{
-		
+		Connection conn =  DBUtils.getConnection();
+		String sql = "" +
+				" update imooc_goddess "+
+				" set user_name=?,sex=?,age=?,birthday=?,email=?,mobile=?, "+
+				" create_date='2017-10-10',update_date='2017-10-10',isdel=?) "+
+				" where id=? ";//?表示相对应的参数赋值的占位符
+		try {
+			//将sql语句加载到数据库驱动中，但是没有直接执行
+			PreparedStatement ptmt = conn.prepareStatement(sql);
+			ptmt.setString(1,g.getUser_name());
+			ptmt.setInt(2,g.getSex());
+			ptmt.setInt(3, g.getAge());
+			ptmt.setDate(4,new Date(g.getBirthday().getTime()));
+			ptmt.setString(5, g.getEmail());
+			ptmt.setString(6, g.getMobile());
+			ptmt.setString(7,g.getUpdate_user());
+			ptmt.setInt(8,g.getIsdel());
+			ptmt.setInt(9,g.getId());
+			ptmt.execute();//调用execute()才执行sql语句
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void delGoddess()
+	public void delGoddess(Integer id)
 	{
-		
+		Connection conn =  DBUtils.getConnection();
+		String sql = "" +
+				" delete imooc_goddess "+
+				" where id=? ";//?表示相对应的参数赋值的占位符
+		try {
+			//将sql语句加载到数据库驱动中，但是没有直接执行
+			PreparedStatement ptmt = conn.prepareStatement(sql);
+			
+			ptmt.setInt(1,id);
+			ptmt.execute();//调用execute()才执行sql语句
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
-	
+	public void set(Integer id)
+	{
+		Connection conn =  DBUtils.getConnection();
+		String sql = "" +
+				" select * from imooc_goddess "+
+				" where id=? ";//?表示相对应的参数赋值的占位符
+		try {
+			//将sql语句加载到数据库驱动中，但是没有直接执行
+			PreparedStatement ptmt = conn.prepareStatement(sql);
+			
+			ptmt.setInt(1,id);
+			ptmt.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	//泛型编程 <>里面是类型
 	//泛型编程：编译器帮你检查错误，防止运行错误
 	public List<Goddess> query() throws SQLException //创建一个集合 ,先导入model的Goddess
